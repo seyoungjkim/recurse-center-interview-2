@@ -61,11 +61,11 @@ def _parse_tokens(tokens: List[str]) -> AST:
                     ast.append(_parse_tokens(tokens))
                 tokens.pop(0)
                 return ast
-            case x:
+            case _:
                 try:
-                    return float(x)
+                    return float(token)
                 except ValueError:
-                    return x
+                    return token
 
 """
 Evaluate the Lisp program.
