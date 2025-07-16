@@ -35,7 +35,10 @@ def parse_program(program: str) -> AST:
     # Create the AST.
     return _parse_tokens(tokens)
 
-
+"""
+Check that (1) program is not empty and (2) program has exactly one closing parenthesis
+for every open parenthesis.
+"""
 def _is_program_syntactically_valid(tokens: List[str]) -> bool:
     if len(tokens) == 0:
         return False
@@ -51,6 +54,9 @@ def _is_program_syntactically_valid(tokens: List[str]) -> bool:
     return open_paren_count == 0
 
 
+"""
+Construct the AST from a list of tokens.
+"""
 def _parse_tokens(tokens: List[str]) -> AST:
     while len(tokens) > 0:
         token = tokens.pop(0)
