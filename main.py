@@ -18,32 +18,38 @@ type Atom = Union[Number, Symbol]
 type Number = float
 type Symbol = str
 
+
 """
 Convert a Lisp program into an abstract syntax tree.
 """
 def parse_program(program: str) -> AST:
-    tokens = _tokenize(program)
-    if not _is_program_well_formed(tokens):
+    # Tokenize the program.
+    whitespaced_input = program.replace("(", " ( ").replace(")", " ) ")
+    tokens = whitespaced_input.split()
+    
+    # Confirm program is syntactically correct. Note that programs can still be
+    # semantically invalid, e.g. the program (2 3) will still pass this case.
+    if not _is_program_syntactically_valid(tokens):
         raise ValueError("program is malformed")
+    
+    # Create the AST.
     return _parse_tokens(tokens)
 
-def _tokenize(program: str) -> List[str]:
-    whitespaced_input = program.replace("(", " ( ").replace(")", " ) ")
-    return whitespaced_input.split()
 
-def _is_program_well_formed(tokens: List[str]) -> bool:
+def _is_program_syntactically_valid(tokens: List[str]) -> bool:
     if len(tokens) == 0:
         return False
-    stack_count = 0
+    open_paren_count = 0
     for token in tokens:
         match token:
             case "(":
-                stack_count += 1
+                open_paren_count += 1
             case ")":
-                if stack_count == 0:
+                if open_paren_count == 0:
                     return False
-                stack_count -= 1
-    return stack_count == 0
+                open_paren_count -= 1
+    return open_paren_count == 0
+
 
 def _parse_tokens(tokens: List[str]) -> AST:
     while len(tokens) > 0:
@@ -60,3 +66,11 @@ def _parse_tokens(tokens: List[str]) -> AST:
                     return float(x)
                 except ValueError:
                     return x
+
+"""
+Evaluate the Lisp program.
+
+TODO: implement during pairing interview.
+"""
+def evaluate(ast: AST):
+    pass
